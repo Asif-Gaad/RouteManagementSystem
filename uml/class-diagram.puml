@@ -1,0 +1,72 @@
+@startuml
+interface Bookable {
+  +bookTicket(p, vehicleId, src, dst): Ticket
+  +cancelTicket(ticketId)
+}
+abstract class Vehicle {
+  -vehicleId: String
+  -capacity: int
+  -bookedSeats: int
+  -route: Route
+  +calculateFare(km): double {abstract}
+  +getType(): String {abstract}
+  +bookSeat()
+  +releaseSeat()
+}
+class Bus
+class Train
+class Station {
+  -id: int
+  -name: String
+  -distanceFromPrevious: double
+}
+class RouteNode {
+  -data: Station
+  -next: RouteNode
+  -prev: RouteNode
+}
+class Route {
+  -head: RouteNode
+  -tail: RouteNode
+  -size: int
+  +addStation()
+  +insertAfter()
+  +removeStation()
+  +search()
+  +reverse()
+  +getDistance()
+  +display()
+}
+class Passenger {
+  -name: String
+  -cnic: String
+}
+class Ticket {
+  -ticketId: int
+  -source: String
+  -destination: String
+  -fare: double
+}
+class TransportSystem {
+  -routes: ArrayList<Route>
+  -vehicles: ArrayList<Vehicle>
+  -tickets: ArrayList<Ticket>
+}
+class FileManager {
+  +save(system)
+  +load(): TransportSystem
+}
+
+Vehicle <|-- Bus
+Vehicle <|-- Train
+Bookable <|.. TransportSystem
+Route "1" o-- "*" RouteNode
+RouteNode --> Station
+Vehicle --> Route
+Ticket --> Passenger
+Ticket --> Vehicle
+TransportSystem "1" o-- "*" Route
+TransportSystem "1" o-- "*" Vehicle
+TransportSystem "1" o-- "*" Ticket
+FileManager ..> TransportSystem
+@enduml
